@@ -71,10 +71,7 @@ OnPlayerDied: Triggered by PlayerController on pipe collision, handled by ScoreM
 OnPlayerJumped: Triggered by PlayerController on spacebar press, handled by ScoreManager to play jump audio.
 
 
-This event-driven flow ensures:
-
-PlayerController (Control) doesn't need to know about ScoreManager (View); it just sends events when something happens.
-
+This event-driven setup means that PlayerController never needs to reference ScoreManager directly. Because of this, PlayerController does not need to know anything about ScoreManager; it simply raises events when gameplay actions occur.
 
 You can change ScoreManager (View) without changing PlayerController, for example, by changing the font of the score text or swapping audio clips.
 
@@ -97,7 +94,7 @@ The ScoreManager uses a Singleton pattern to ensure a single, globally accessibl
     }
 This design choice:
 
-There is no longer a need for many different places in the codebase to refer to ScoreManager (for example, PlayerController never needs a [SerializeField] ScoreManager scoreManager field).
+This avoids having multiple scripts reference ScoreManager directly (for example, PlayerController never needs a [SerializeField] ScoreManager scoreManager field).
 
 
 Ensures that the View layer stays the same and doesn't change when scenes are loaded (via DontDestroyOnLoad).
@@ -119,8 +116,7 @@ Events (GameEvents): Act as the "middleman" between Control and View, eliminatin
 Singleton (ScoreManager): Ensures a single, reliable View instance without coupling it to other systems.
 
 
-Without events, PlayerController would need direct references to UI and audio systems, increasing coupling and making future changes, such as adding new UI feedback, more error-prone.
-
+Without events, PlayerController would have needed direct references to UI and audio systems, which would have made the code harder to change later.
 
 ## Open-Source Assets
 
