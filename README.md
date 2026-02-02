@@ -3,7 +3,7 @@
 There is no dedicated Model class for this project because it is a simple arcade game with little persistent state. The gameplay state is lightweight and event-driven, so this devlog is mostly about Control and View.
 ### MVC Pattern: Control & View Implementation
 #### 1. Control Layer: PlayerController (Core Gameplay Logic)
-The PlayerController class is the Controller in the MVC pattern. It handles player input, core gameplay rules (like jump physics and collision detection), and changes the state of the game without directly interacting with view elements like score text, audio, and the game over UI.
+The PlayerController class is the Controller in the MVC pattern. It handles player input, core gameplay rules, like jump physics and collision detection, and changes the state of the game without directly interacting with view elements like score text, audio, and the game over UI.
 
 
 Key responsibilities of the Controller layer (PlayerController):
@@ -17,7 +17,7 @@ Input Handling: Listens for spacebar input to trigger jumps:
         rb.AddForce(Vector2.up * flapForce, ForceMode2D.Impulse);
         GameEvents.RaisePlayerJumped(); 
     }
-Collision/Trigger Logic: Detects pipe collisions (to trigger death) and ScoreZone triggers to increment score :
+Collision/Trigger Logic: Detects pipe collisions to trigger death and ScoreZone triggers to increment score :
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -28,7 +28,7 @@ Collision/Trigger Logic: Detects pipe collisions (to trigger death) and ScoreZon
             Destroy(other.gameObject); 
         }
     }
-Decoupling Choice: PlayerController doesn't directly change the score or play audio; instead, it raises events (through GameEvents) to let other parts of the game know when the state changes. This means that the controller doesn't know anything about the UI, audio, or score systems; it just sends out "what happened," not "how to react."
+Decoupling Choice: PlayerController doesn't directly change the score or play audio; instead, it raises events through GameEvents to let other parts of the game know when the state changes. This means that the controller doesn't know anything about the UI, audio, or score systems.
 #### 2. View Layer: ScoreManager (Presentation & Feedback)
 The ScoreManager class is the View in the MVC pattern. It takes care of all the visual and auditory feedback for the game, like showing the score, the game over text, and sound effects. It also responds to events that the Controller (PlayerController) or other systems trigger.
 
@@ -36,7 +36,7 @@ The ScoreManager class is the View in the MVC pattern. It takes care of all the 
 Key responsibilities of the View layer (ScoreManager):
 
 
-UI Updates: Updates the score text when a OnScoreIncreased event is raised (lines 47-58):
+UI Updates: Updates the score text when a OnScoreIncreased event is raised:
 
             private void HandleScoreIncreased(int addValue)
             {
@@ -59,16 +59,16 @@ Audio Feedback: Plays jump/score/death sounds in response to OnPlayerJumped, OnS
 Important for the View layer: ScoreManager never changes the rules of the game; it only reacts to events. It doesn't mention PlayerController or PipeMovement; it just listens for global events to change the presentation.
 ### Decoupling Mechanisms: Events & Singleton
 #### 1. GameEvents: Decoupling Control and View with Event-Driven Design
-The GameEvents static class (a central event bus) is the primary tool for decoupling the Controller (PlayerController) and View (ScoreManager). It defines typed events for core game state changes:
+The GameEvents static class, a central event bus, is the primary tool for decoupling the Controller (PlayerController) and View (ScoreManager). It defines typed events for core game state changes:
 
 
-OnScoreIncreased: Triggered by PlayerController (line 41) when the player passes a ScoreZone; handled by ScoreManager (line 47) to update the score.
+OnScoreIncreased: Triggered by PlayerController when the player passes a ScoreZone, handled by ScoreManager to update the score.
 
 
-OnPlayerDied: Triggered by PlayerController (line 35) on pipe collision; handled by ScoreManager (line 59) to show game over UI and stop gameplay.
+OnPlayerDied: Triggered by PlayerController on pipe collision, handled by ScoreManager to show game over UI and stop gameplay.
 
 
-OnPlayerJumped: Triggered by PlayerController (line 25) on spacebar press; handled by ScoreManager (line 89) to play jump audio.
+OnPlayerJumped: Triggered by PlayerController on spacebar press, handled by ScoreManager to play jump audio.
 
 
 This event-driven flow ensures:
@@ -76,12 +76,12 @@ This event-driven flow ensures:
 PlayerController (Control) doesn't need to know about ScoreManager (View); it just sends events when something happens.
 
 
-You can change ScoreManager (View) without changing PlayerController (for example, by changing the font of the score text or swapping audio clips).
+You can change ScoreManager (View) without changing PlayerController, for example, by changing the font of the score text or swapping audio clips.
 
 
 
 #### 2. Singleton Pattern in ScoreManager: Consistent View Access
-The ScoreManager uses a Singleton pattern (lines 16-25) to ensure a single, globally accessible instance of the View layer:
+The ScoreManager uses a Singleton pattern to ensure a single, globally accessible instance of the View layer:
 
     void Awake()
     {
@@ -100,7 +100,7 @@ This design choice:
 There is no longer a need for many different places in the codebase to refer to ScoreManager (for example, PlayerController never needs a [SerializeField] ScoreManager scoreManager field).
 
 
-Ensures that the View layer stays the same and doesn't change (if possible) when scenes are loaded (via DontDestroyOnLoad).
+Ensures that the View layer stays the same and doesn't change when scenes are loaded (via DontDestroyOnLoad).
 
 
 Keeps things separate: The Singleton is only used for the View layer to manage its own instance; PlayerController still uses events instead of directly calling ScoreManager.instance.
@@ -119,7 +119,7 @@ Events (GameEvents): Act as the "middleman" between Control and View, eliminatin
 Singleton (ScoreManager): Ensures a single, reliable View instance without coupling it to other systems.
 
 
-Without events, PlayerController would need direct references to UI and audio systems, increasing coupling and making future changes (such as adding new UI feedback) more error-prone.
+Without events, PlayerController would need direct references to UI and audio systems, increasing coupling and making future changes, such as adding new UI feedback, more error-prone.
 
 
 ## Open-Source Assets
