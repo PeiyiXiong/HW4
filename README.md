@@ -121,8 +121,8 @@ Without events, PlayerController would have needed direct references to UI and a
 
 - [Brackey's Platformer Bundle](https://brackeysgames.itch.io/brackeys-platformer-bundle) - sound effects
 - [2D pixel art seagull sprites](https://elthen.itch.io/2d-pixel-art-seagull-sprites) - seagull sprites
-- [1](https://freesound.org) - jump sound effects
-- [1](https://freesound.org) - death sound effects
-- [1](https://freesound.org) - score sound effects
+- [Jump SFX / 8bit](https://freesound.org/people/jalastram/sounds/386656/) - jump sound effects
+- [Zombie Death 1](https://freesound.org/people/tonsil5/sounds/555412/) - death sound effects
+- [Coin_Misc_04](https://freesound.org/people/Valenspire/sounds/699533/) - score sound effects
 - [Bird Sprites with Animations](https://carysaurus.itch.io/bird-sprites) - bird sprites
 - [Industrial Pipe Platformer Tileset](https://wwolf-w.itch.io/industrial-pipe-platformer-tileset) - pipe sprites
