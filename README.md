@@ -50,8 +50,7 @@ UI Updates: Updates the score text when a OnScoreIncreased event is raised:
                     audioSource.PlayOneShot(scoreClip);
                 }
             }
-Game Over Presentation: Activates the game over text, stops pipe/player movement, and plays death audio when OnPlayerDied is raised.
-
+Game Over Presentation: When the OnPlayerDied event (triggered by PlayerController on pipe collision) is raised, ScoreManager activates the game over text, stops pipe/player movement, and plays death audio.
 
 Audio Feedback: Plays jump/score/death sounds in response to OnPlayerJumped, OnScoreIncreased, and OnPlayerDied events (no direct calls from PlayerController).
 
